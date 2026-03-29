@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>生日卡片產生器</title>
+    <style>
+        :root { --primary: #6c5ce7; --bg: #f8f9fa; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 50px; }
+        .editor-container { display: flex; background: white; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); overflow: hidden; max-width: 900px; width: 100%; }
+        
+        /* 左側控制面板 */
+        .controls { padding: 40px; width: 40%; border-right: 1px solid #eee; }
+        .controls h2 { color: #2d3436; margin-bottom: 25px; font-size: 1.5rem; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #636e72; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #dfe6e9; border-radius: 8px; box-sizing: border-box; }
+        
+        .theme-selector { display: flex; gap: 10px; margin-bottom: 25px; }
+        .theme-btn { flex: 1; padding: 10px; border: 1px solid #dfe6e9; background: white; cursor: pointer; border-radius: 5px; font-size: 0.8rem; }
+        .theme-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .generate-btn { width: 100%; padding: 15px; background: #00b894; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .generate-btn:hover { background: #55efc4; }
+
+        /* 右側預覽區 */
+        .preview-box { padding: 40px; width: 60%; background: #f1f2f6; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .card-preview { width: 300px; height: 400px; background: white; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; transition: 0.5s; position: relative; }
+        
+        /* 風格樣式 */
+        .style-modern { border: 2px solid #2d3436; }
+        .style-modern::after { content: ''; width: 40px; height: 2px; background: #000; margin-top: 20px; }
+        .style-warm { background: #fff5f5; border: 2px dashed #ff7675; color: #d63031; }
+    </style>
+</head>
+<body>
+
+<div class="editor-container">
+    <div class="controls">
+        <h2>🪄 製作卡片</h2>
+        <label>祝福語</label>
+        <input type="text" id="wishText" placeholder="例如：Happy Birthday!" oninput="sync()">
+        
+        <label>音樂連結 (.mp3)</label>
+        <input type="text" id="musicUrl" placeholder="請貼上 mp3 直連網址" oninput="sync()">
+
+        <label>選擇風格</label>
+        <div class="theme-selector">
+            <button class="theme-btn active" onclick="changeStyle('style-modern', this)">極簡線條</button>
+            <button class="theme-btn" onclick="changeStyle('style-warm', this)">溫暖粉紅</button>
+        </div>
+
+        <button class="generate-btn" onclick="generate()">生成分享連結</button>
+        <p id="finalLink" style="word-break: break-all; font-size: 0.8rem; color: #0984e3; margin-top: 15px;"></p>
+    </div>
+
+    <div class="preview-box">
+        <p style="margin-bottom: 10px; color: #b2bec3;">即時預覽</p>
+        <div id="cardMockup" class="card-preview style-modern">
+            <h1 id="previewDisplay">Happy Birthday!</h1>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentStyle = 'style-modern';
+
+    function sync() {
+        const text = document.getElementById('wishText').value;
+        document.getElementById('previewDisplay').innerText = text || "在此顯示祝福";
+    }
+
+    function changeStyle(styleName, btn) {
+        currentStyle = styleName;
+        document.getElementById('cardMockup').className = 'card-preview ' + styleName;
+        document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function generate() {
+        const text = encodeURIComponent(document.getElementById('wishText').value);
+        const music = encodeURIComponent(document.getElementById('musicUrl').value);
+        
+        // 假設展示頁面叫 card.html
+        const url = `${window.location.origin}${window.location.pathname.replace('index.html', '')}card.html?msg=${text}&m=${music}&s=${currentStyle}`;
+        
+        const linkDisplay = document.getElementById('finalLink');
+        linkDisplay.innerHTML = `成功！請複製網址傳給壽星：<br><a href="${url}" target="_blank">${url}</a>`;
+    }
+</script>
+
+</body>
+</html>
