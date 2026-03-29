@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>收到一份驚喜！</title>
+    <style>
+        body { margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center; background: #f0f2f5; overflow: hidden; }
+        .card { width: 350px; height: 500px; background: white; box-shadow: 0 30px 60px rgba(0,0,0,0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; border-radius: 15px; }
+        
+        /* 繼承風格 */
+        .style-modern { border: 2px solid #333; }
+        .style-warm { background: #fff5f5; border: 2px dashed #ff7675; color: #d63031; }
+        
+        .play-hint { position: fixed; bottom: 20px; font-size: 0.9rem; color: #999; }
+    </style>
+</head>
+<body>
+
+<div id="mainCard" class="card">
+    <h1 id="msgDisplay">載入中...</h1>
+</div>
+<div class="play-hint">點擊螢幕開啟音樂驚喜 🎵</div>
+
+<script>
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        const msg = params.get('msg') || "祝你生日快樂！";
+        const music = params.get('m');
+        const style = params.get('s') || 'style-modern';
+
+        // 1. 設定文字
+        document.getElementById('msgDisplay').innerText = msg;
+        
+        // 2. 設定風格
+        document.getElementById('mainCard').classList.add(style);
+
+        // 3. 設定音樂
+        if (music) {
+            const audio = new Audio(music);
+            audio.loop = true;
+            document.body.addEventListener('click', () => {
+                audio.play();
+                document.querySelector('.play-hint').innerText = "音樂播放中...";
+            }, { once: true });
+        }
+    }
+</script>
+
+</body>
+</html>
