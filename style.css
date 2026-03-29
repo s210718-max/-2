@@ -177,3 +177,63 @@ input {
     0% { transform: translateY(0px); }
     100% { transform: translateY(-10px); }
 }
+
+
+/* 添加到 card.html 的 <style> 標籤中 */
+
+body {
+    background: linear-gradient(135deg, #f0f4f8, #d9e2ee); /* 和製作頁面保持一致 */
+}
+
+.card {
+    border: none; /* 移除預設邊框 */
+    overflow: hidden;
+    position: relative; /* 確保內部裝飾品可以絕對定位 */
+}
+
+/* 將上方 index.html 中的 .style-modern, .style-warm 等樣式全部複製過來 */
+/* -- 風格 1: 極簡線條 -- */
+.style-modern {
+    background: linear-gradient(45deg, #e0e0e0, #ffffff);
+    color: #333;
+}
+.style-modern .card-background-deco {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.8;
+}
+.style-modern .card-border-deco {
+    position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
+    border: 1px dashed #666;
+}
+.style-modern .card-element-deco::before {
+    content: ''; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: 60px; height: 3px; background: #333; border-radius: 5px;
+}
+
+/* -- 風格 2: 溫暖粉紅 -- */
+.style-warm {
+    background: linear-gradient(135deg, #ffebee, #ffcdd2);
+    color: #e57373;
+    border-radius: 15px;
+}
+.style-warm h1 { font-family: 'Comic Sans MS', cursive; }
+.style-warm .card-background-deco {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at top left, rgba(255,193,7,0.1) 0%, transparent 40%),
+                radial-gradient(circle at bottom right, rgba(255,193,7,0.1) 0%, transparent 40%);
+}
+.style-warm .card-element-deco::before,
+.style-warm .card-element-deco::after {
+    content: '💖'; position: absolute; font-size: 24px; animation: float 3s infinite ease-in-out alternate;
+}
+.style-warm .card-element-deco::before { top: 15%; left: 10%; animation-delay: 0s; }
+.style-warm .card-element-deco::after { bottom: 10%; right: 15%; animation-delay: 1.5s; }
+
+/* -- 動畫定義 -- */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-10px); }
+}
