@@ -1,239 +1,46 @@
-body {
-    /* 設定網頁背景和字體 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    background-color: #f7f3e8; /* 淺藍色背景 */
-    font-family: 'Arial', sans-serif;
-    color: #333;
+:root { --primary: #ff7f50; --bg-body: #f4f7f6; }
+
+body { font-family: 'Arial', sans-serif; margin: 0; }
+
+/* 產生器版面布局 */
+.container { display: flex; flex-wrap: wrap; background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); max-width: 1000px; width: 100%; overflow: hidden; margin: 40px auto; }
+.editor { flex: 1; padding: 40px; min-width: 300px; border-right: 1px solid #eee; }
+.preview-section { flex: 1; padding: 40px; background: #fafafa; display: flex; flex-direction: column; align-items: center; }
+
+/* 表單元件 */
+input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; margin-bottom: 10px; }
+.theme-group { display: flex; gap: 10px; margin-bottom: 20px; }
+.btn-theme { flex: 1; padding: 10px; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 8px; }
+.btn-theme.active { background: var(--primary); color: white; border-color: var(--primary); }
+.gen-btn { width: 100%; padding: 15px; background: #2ecc71; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
+
+/* 卡片基礎結構 */
+#card-preview, .card-final { 
+    width: 320px; height: 450px; border-radius: 15px; position: relative; 
+    display: flex; flex-direction: column; justify-content: center; 
+    align-items: center; text-align: center; padding: 30px; 
+    box-sizing: border-box; transition: 0.5s; overflow: hidden; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
 }
 
-#card-container {
-    /* 卡片大小和居中 */
-    width: 350px;
-    height: 450px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* 陰影讓卡片立體 */
-    border-radius: 15px;
-    overflow: hidden; /* 隱藏超出卡片邊界的內容 */
-    transition: transform 0.8s; /* 讓轉換更流暢 */
-}
+/* 最終展示卡片動畫 */
+.card-final { animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 350px; height: 500px; }
 
-/* 封面樣式 */
-#card-cover {
-    width: 100%;
-    height: 100%;
-    background-color: #ffb6c1; /* 柔和的粉紅色封面 */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-    box-sizing: border-box;
-    cursor: pointer; /* 顯示可點擊游標 */
-}
+/* 裝飾與主題 */
+.deco-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.deco-icon { font-size: 50px; margin-bottom: 20px; z-index: 1; animation: float 3s infinite ease-in-out; }
 
-/* 內頁樣式 */
-#card-inside {
-    width: 100%;
-    height: 100%;
-    background-color: #ffffff; /* 白色內頁 */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    text-align: center;
-    padding: 30px;
-    box-sizing: border-box;
-}
+.theme-sweet { background: #ffb6c1; color: #8b0000; }
+.theme-sweet .deco-bg { background-image: radial-gradient(#fff 2px, transparent 2px); background-size: 20px 20px; opacity: 0.3; }
 
-/* 隱藏/顯示的 CSS 類別 (由 JavaScript 控制) */
-.hidden {
-    display: none !important;
-}
+.theme-elegant { background: #2c3e50; color: #f1c40f; border: 5px double #f1c40f; }
+.theme-elegant .deco-bg { background: linear-gradient(45deg, transparent 45%, #f1c40f 50%, transparent 55%); background-size: 10px 10px; opacity: 0.1; }
 
-/* 按鈕樣式 */
-button {
-    padding: 10px 20px;
-    margin-top: 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #ff7f50; /* 珊瑚橘色按鈕 */
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+.theme-sky { background: #87ceeb; color: white; }
+.theme-sky .deco-bg { background: white; border-radius: 50%; width: 100px; height: 100px; position: absolute; top: -20px; right: -20px; filter: blur(30px); opacity: 0.5; }
 
-button:hover {
-    background-color: #ff6347; /* 滑鼠移上變深色 */
-}
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+@keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-h1 {
-    font-size: 28px;
-    color: #8b0000; /* 深紅色文字 */
-}
-
-h2 {
-    color: #4682b4; /* 藍色標題 */
-}
-
-
-
-
-
-
-/* 添加到 index.html 的 <style> 標籤中 */
-
-/* -- 自定義變數 (方便統一修改顏色) -- */
-:root {
-    --primary-color: #ff6b6b; /* 主色調 */
-    --secondary-color: #48dbfb; /* 副色調 */
-    --bg-light: #fdfdfd; /* 淺色背景 */
-    --text-dark: #2c3e50; /* 深色文字 */
-}
-
-body {
-    background: linear-gradient(135deg, #f0f4f8, #d9e2ee); /* 全頁背景漸變 */
-    color: var(--text-dark);
-}
-
-.controls h2, .controls label { color: var(--text-dark); }
-
-input {
-    border: 1px solid #dcdcdc;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.theme-btn.active {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.generate-btn {
-    background: #2ecc71; /* 綠色按鈕 */
-}
-.generate-btn:hover {
-    background: #27ae60;
-}
-
-/* 卡片預覽區的基礎樣式 */
-.card-preview {
-    border: none; /* 移除預設邊框，改用背景裝飾 */
-    background: var(--bg-light);
-    overflow: hidden; /* 確保裝飾品不會溢出 */
-    position: relative; /* 讓內部裝飾品可以絕對定位 */
-}
-
-/* -- 風格 1: 極簡線條 (Modern Line) -- */
-.style-modern {
-    background: linear-gradient(45deg, #e0e0e0, #ffffff);
-    color: #333;
-}
-.style-modern .card-background-deco {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
-    background-size: 20px 20px; /* 網格背景 */
-    opacity: 0.8;
-}
-.style-modern .card-border-deco {
-    position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
-    border: 1px dashed #666; /* 虛線邊框 */
-}
-.style-modern .card-element-deco::before {
-    content: ''; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-    width: 60px; height: 3px; background: #333; border-radius: 5px; /* 底部短線 */
-}
-
-
-/* -- 風格 2: 溫暖粉紅 (Warm Pink) -- */
-.style-warm {
-    background: linear-gradient(135deg, #ffebee, #ffcdd2); /* 漸層背景 */
-    color: #e57373;
-    border-radius: 15px; /* 圓角卡片 */
-}
-.style-warm h1 { font-family: 'Comic Sans MS', cursive; } /* 卡片內文字換個可愛字體 */
-.style-warm .card-background-deco {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(circle at top left, rgba(255,193,7,0.1) 0%, transparent 40%),
-                radial-gradient(circle at bottom right, rgba(255,193,7,0.1) 0%, transparent 40%);
-}
-.style-warm .card-element-deco::before,
-.style-warm .card-element-deco::after {
-    content: '💖'; position: absolute; font-size: 24px; animation: float 3s infinite ease-in-out alternate;
-}
-.style-warm .card-element-deco::before { top: 15%; left: 10%; animation-delay: 0s; }
-.style-warm .card-element-deco::after { bottom: 10%; right: 15%; animation-delay: 1.5s; }
-
-/* -- 更多風格 (你可以自己添加，例如浪漫紫、未來藍等) -- */
-/* .style-romantic-purple { ... } */
-
-
-/* -- 動畫定義 -- */
-@keyframes float {
-    0% { transform: translateY(0px); }
-    100% { transform: translateY(-10px); }
-}
-
-
-/* 添加到 card.html 的 <style> 標籤中 */
-
-body {
-    background: linear-gradient(135deg, #f0f4f8, #d9e2ee); /* 和製作頁面保持一致 */
-}
-
-.card {
-    border: none; /* 移除預設邊框 */
-    overflow: hidden;
-    position: relative; /* 確保內部裝飾品可以絕對定位 */
-}
-
-/* 將上方 index.html 中的 .style-modern, .style-warm 等樣式全部複製過來 */
-/* -- 風格 1: 極簡線條 -- */
-.style-modern {
-    background: linear-gradient(45deg, #e0e0e0, #ffffff);
-    color: #333;
-}
-.style-modern .card-background-deco {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-    opacity: 0.8;
-}
-.style-modern .card-border-deco {
-    position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
-    border: 1px dashed #666;
-}
-.style-modern .card-element-deco::before {
-    content: ''; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-    width: 60px; height: 3px; background: #333; border-radius: 5px;
-}
-
-/* -- 風格 2: 溫暖粉紅 -- */
-.style-warm {
-    background: linear-gradient(135deg, #ffebee, #ffcdd2);
-    color: #e57373;
-    border-radius: 15px;
-}
-.style-warm h1 { font-family: 'Comic Sans MS', cursive; }
-.style-warm .card-background-deco {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(circle at top left, rgba(255,193,7,0.1) 0%, transparent 40%),
-                radial-gradient(circle at bottom right, rgba(255,193,7,0.1) 0%, transparent 40%);
-}
-.style-warm .card-element-deco::before,
-.style-warm .card-element-deco::after {
-    content: '💖'; position: absolute; font-size: 24px; animation: float 3s infinite ease-in-out alternate;
-}
-.style-warm .card-element-deco::before { top: 15%; left: 10%; animation-delay: 0s; }
-.style-warm .card-element-deco::after { bottom: 10%; right: 15%; animation-delay: 1.5s; }
-
-/* -- 動畫定義 -- */
-@keyframes float {
-    0% { transform: translateY(0px); }
-    100% { transform: translateY(-10px); }
-}
+#result-link { margin-top: 20px; padding: 15px; background: #e8f4fd; border-radius: 8px; display: none; word-break: break-all; border: 1px dashed #3498db; }
+.hint { position: fixed; bottom: 30px; color: #888; font-size: 14px; text-align: center; width: 100%; }
